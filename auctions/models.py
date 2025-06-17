@@ -17,7 +17,7 @@ class AuctionListings(models.Model):
     imageUrl = models.CharField(blank=True)
     category = models.ForeignKey(Category, blank=True)
 
-
+    
 class Bids(models.Model):
     pass
 

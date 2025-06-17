@@ -6,7 +6,28 @@ from django.urls import reverse
 
 from .models import *
 
+def create_listing(request):
+    if request.method == "POST":
+        title = request.POST["title"]
+        description = request.POST["description"]
+        bid = request.POST["bid"]
+        imageUrl = request.POST['imageUrl']
+        category = request.POST['category']        
 
+        listing = AuctionListings(
+            title = title,
+            description = description,
+            bid = bid,
+            imageUrl = imageUrl,
+            category = category
+        )
+
+        listing.save()
+
+        return HttpResponseRedirect(reverse("index")) 
+    
+    else:
+        return render(request, "auctions/CreateListing.html")
 
 def index(request):
     return render(request, "auctions/index.html")
