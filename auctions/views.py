@@ -27,7 +27,7 @@ def create_listing(request):
         return HttpResponseRedirect(reverse("index")) 
     
     else:
-        return render(request, "auctions/CreateListing.html")
+        return render(request, "auctions/createListing.html")
 
 def index(request):
     return render(request, "auctions/index.html")
