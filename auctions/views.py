@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.urls import reverse
 
 from .models import *
+from .forms import *
 
 def create_listing(request):
     if request.method == "POST":
@@ -13,6 +14,8 @@ def create_listing(request):
         bid = request.POST["bid"]
         imageUrl = request.POST['imageUrl']
         category = request.POST['category']        
+        category = Category.objects.get(pk = category)
+        print(category)
 
         listing = AuctionListings(
             title = title,
@@ -27,7 +30,10 @@ def create_listing(request):
         return HttpResponseRedirect(reverse("index")) 
     
     else:
-        return render(request, "auctions/createListing.html")
+        context ={
+            'form' : CreateListinigForm()
+        }
+        return render(request, "auctions/createListing.html", context)
 
 def index(request):
     return render(request, "auctions/index.html")
@@ -82,4 +88,6 @@ def register(request):
         login(request, user)
         return HttpResponseRedirect(reverse("index"))
     else:
-        return render(request, "auctions/register.html")
+        return render(request, "auctions/register.html", {
+            "form": CreateListinigForm()
+        })

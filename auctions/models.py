@@ -15,8 +15,8 @@ class AuctionListings(models.Model):
     title = models.CharField(max_length= 30)
     description = models.TextField()
     bid = models.DecimalField(max_digits=12, decimal_places= 2)
-    imageUrl = models.CharField(blank=True, null= True)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null= True)
+    imageUrl = models.CharField(blank= True, null= True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, blank= True, null= True)
 
     def __str__(self):
         return self.title

@@ -1,4 +1,4 @@
-from models import *
+from .models import *
 from django.forms import ModelForm
 from django import forms
 
@@ -10,20 +10,22 @@ class CreateListinigForm(ModelForm):
             'title': 'Item',
             'description': 'Item description',
             'bid': 'Current Price',
-            'imageUrl': 'photo URL'
+            'imageUrl': 'photo URL',
+            'category' : 'Category'
         }
         widgets = {
             'titulo': forms.TextInput(attrs={
                 'class': 'form-control'}),
             
             'description': forms.TextInput(attrs={
-                 'class': "form-control", 'type': "file", 'id': "formFile", "rows":"3"}),
+                 'class': "form-control", "rows":"3"}),
             
             'bid': forms.TextInput(
                 attrs={'class': 'form-control', 'step': '0.01'}),
             
             'imageUrl': forms.TextInput(attrs={
-                'class': 'form-control', "type":"file", "id":"formFile"}),
+                'class': 'form-control'}),
+
         }
         error_messages = {
             'title': {
