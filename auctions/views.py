@@ -7,6 +7,14 @@ from django.urls import reverse
 from .models import *
 from .forms import *
 
+def listing(request, listinig_id):
+    listing = AuctionListings.objects.get(pk = listinig_id)
+    context = {
+        "listinig" :  listing
+    }
+    return render(request,"auctions/listing.html", context=context)
+
+
 def create_listing(request):
     if request.method == "POST":
         title = request.POST["title"]
@@ -15,7 +23,6 @@ def create_listing(request):
         imageUrl = request.POST['imageUrl']
         category = request.POST['category']        
         category = Category.objects.get(pk = category)
-        print(category)
 
         listing = AuctionListings(
             title = title,
