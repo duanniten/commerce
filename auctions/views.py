@@ -7,8 +7,8 @@ from django.urls import reverse
 from .models import *
 from .forms import *
 
-def listing(request, listinig_id):
-    listing = AuctionListings.objects.get(pk = listinig_id)
+def listing(request, listing_id):
+    listing = AuctionListings.objects.get(pk = listing_id)
     context = {
         "listinig" :  listing
     }
