@@ -8,10 +8,13 @@ from .models import *
 from .forms import *
 
 def listing(request, listing_id):
-    listing = AuctionListings.objects.get(pk = listing_id)
-    context = {
-        "listinig" :  listing
-    }
+    try:
+        listing = AuctionListings.objects.all()[listing_id]
+        context = {
+            "listing" :  listing
+        }
+    except:
+        print("teste")
     return render(request,"auctions/listing.html", context=context)
 
 
