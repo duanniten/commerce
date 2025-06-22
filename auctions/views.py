@@ -46,7 +46,12 @@ def create_listing(request):
         return render(request, "auctions/createListing.html", context)
 
 def index(request):
-    return render(request, "auctions/index.html")
+    listings = AuctionListings.objects.all()
+    context = {
+        "listings" : listings
+    }
+
+    return render(request, "auctions/index.html", context=context)
 
 
 def login_view(request):
