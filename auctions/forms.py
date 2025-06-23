@@ -5,11 +5,10 @@ from django import forms
 class CreateListinigForm(ModelForm):
     class Meta:
         model = AuctionListings
-        fields = ['title', 'description', 'bid', 'imageUrl', 'category']
+        fields = ['title', 'description', 'imageUrl', 'category']
         labels = {
             'title': 'Item',
             'description': 'Item description',
-            'bid': 'Current Price',
             'imageUrl': 'photo URL',
             'category' : 'Category'
         }

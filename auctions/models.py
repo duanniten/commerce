@@ -11,24 +11,25 @@ class Category(models.Model):
     def __str__(self):
         return self.categories
 
+class AuctionListings(models.Model):
+    title = models.CharField(max_length= 30)
+    description = models.TextField()
+    imageUrl = models.CharField(blank= True, null= True)
+    category = models.ManyToManyField(Category, blank= True, null= True)
+    creationTimestamp = models.DateTimeField(auto_now_add= True)
+    timestamp = models.DateTimeField(auto_now = True)
 
+    def __str__(self):
+        return self.title
+    
 class Bids(models.Model):
     bidValue = models.DecimalField(max_digits=12, decimal_places=2)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-
+    timestand = models.DateTimeField(auto_now=True, auto_now_add= True)
+    listing = models.ForeignKey(AuctionListings, on_delete= models.CASCADE)
 
 class Comments(models.Model):
     comment = models.TextField()
     user = models.ForeignKey(User, on_delete= models.CASCADE)
-    date = models.DateTimeField(auto_now=True, auto_now_add= True)
-
-class AuctionListings(models.Model):
-    title = models.CharField(max_length= 30)
-    description = models.TextField()
-    bid = models.DecimalField(max_digits=12, decimal_places= 2)
-    imageUrl = models.CharField(blank= True, null= True)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, blank= True, null= True)
-    coments = models.ManyToManyField(Comments, blank=True, null= True)
-
-    def __str__(self):
-        return self.title
+    timestamp  = models.DateTimeField(auto_now=True, auto_now_add= True)
+    listinig = models.ForeignKey(AuctionListings, on_delete=models.CASCADE)
