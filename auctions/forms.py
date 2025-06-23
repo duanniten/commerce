@@ -13,7 +13,7 @@ class CreateListinigForm(ModelForm):
             'category' : 'Category'
         }
         widgets = {
-            'titulo': forms.TextInput(attrs={
+            'title': forms.TextInput(attrs={
                 'class': 'form-control'}),
             
             'description': forms.TextInput(attrs={

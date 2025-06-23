@@ -4,6 +4,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
+from django.contrib.auth.decorators import login_required
+
 from .models import *
 from .forms import *
 
@@ -17,7 +19,7 @@ def listing(request, listing_id):
         print("teste")
     return render(request,"auctions/listing.html", context=context)
 
-
+@login_required
 def create_listing(request):
     if request.method == "POST":
         title = request.POST["title"]
@@ -26,7 +28,6 @@ def create_listing(request):
         imageUrl = request.POST['imageUrl']
         category = request.POST['category']        
         category = Category.objects.get(pk = category)
-
         listing = AuctionListings(
             title = title,
             description = description,
@@ -34,11 +35,8 @@ def create_listing(request):
             imageUrl = imageUrl,
             category = category
         )
-
         listing.save()
-
         return HttpResponseRedirect(reverse("index")) 
-    
     else:
         context ={
             'form' : CreateListinigForm()

@@ -25,11 +25,12 @@ class AuctionListings(models.Model):
 class Bids(models.Model):
     bidValue = models.DecimalField(max_digits=12, decimal_places=2)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    timestand = models.DateTimeField(auto_now=True, auto_now_add= True)
+    timestand = models.DateTimeField(auto_now_add= True)
     listing = models.ForeignKey(AuctionListings, on_delete= models.CASCADE)
+
 
 class Comments(models.Model):
     comment = models.TextField()
     user = models.ForeignKey(User, on_delete= models.CASCADE)
-    timestamp  = models.DateTimeField(auto_now=True, auto_now_add= True)
+    timestamp  = models.DateTimeField(auto_now_add= True)
     listinig = models.ForeignKey(AuctionListings, on_delete=models.CASCADE)
