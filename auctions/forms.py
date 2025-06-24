@@ -3,12 +3,14 @@ from django.forms import ModelForm
 from django import forms
 
 class CreateListinigForm(ModelForm):
+    bid = forms.DecimalField(label='Initial Bid', decimal_places=2, max_digits=10)
+
     class Meta:
         model = AuctionListings
         fields = ['title', 'description', 'imageUrl', 'category']
         labels = {
             'title': 'Item',
-            'description': 'Item description',
+            'description': 'Item Description',
             'imageUrl': 'photo URL',
             'category' : 'Category'
         }
@@ -16,13 +18,10 @@ class CreateListinigForm(ModelForm):
             'title': forms.TextInput(attrs={
                 'class': 'form-control'}),
             
-            'description': forms.TextInput(attrs={
+            'description': forms.Textarea(attrs={
                  'class': "form-control", "rows":"3"}),
-            
-            'bid': forms.TextInput(
-                attrs={'class': 'form-control', 'step': '0.01'}),
-            
-            'imageUrl': forms.TextInput(attrs={
+                  
+            'imageUrl': forms.URLInput(attrs={
                 'class': 'form-control'}),
 
         }

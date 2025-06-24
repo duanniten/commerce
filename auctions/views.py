@@ -27,19 +27,28 @@ def create_listing(request):
         bid = request.POST["bid"]
         imageUrl = request.POST['imageUrl']
         category = request.POST['category']        
-        category = Category.objects.get(pk = category)
         listing = AuctionListings(
             title = title,
             description = description,
-            bid = bid,
             imageUrl = imageUrl,
-            category = category
         )
         listing.save()
+        if category !='':
+            category = Category.objects.get(pk = category)
+            listing.category.set([category])
+
+
+        bids = Bids(
+            bidValue = bid,
+            user = request.user,
+            listing = listing
+        )
+        bids.save()
+
         return HttpResponseRedirect(reverse("index")) 
     else:
         context ={
-            'form' : CreateListinigForm()
+            'form' : CreateListinigForm(),
         }
         return render(request, "auctions/createListing.html", context)
 
