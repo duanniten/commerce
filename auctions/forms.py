@@ -2,10 +2,11 @@ from .models import *
 from django.forms import ModelForm
 from django import forms
 
+class MakeBid(ModelForm):
+    newBid = forms.DecimalField(max_digits=10, decimal_places=2, label= "Make a bid")
+
 class CreateListinigForm(ModelForm):
-
     bid = forms.DecimalField(max_digits=10, decimal_places=2, min_value= 0)
-
     class Meta:
         model = AuctionListings
         fields = ['title', 'description', 'imageUrl', 'category']

@@ -11,32 +11,53 @@ from .forms import *
 
 def listing(request, listing_id):
     try:
-        listing = AuctionListings.objects.all()[listing_id]
+        listing = AuctionListings.objects.all()[listing_id - 1]
+        if request.user:
+            bid = MakeBid()
+        else:
+            bid = None
         context = {
-            "listing" :  listing
+           "listing" :  listing,
+            "makeBid" : bid
         }
+        return render(request,"auctions/listing.html", context=context)
     except:
-        print("teste")
-    return render(request,"auctions/listing.html", context=context)
+        return render(request,"auctions/index.html")
+    
 
 @login_required
 def create_listing(request):
     if request.method == "POST":
-        title = request.POST["title"]
-        description = request.POST["description"]
-        bid = request.POST["bid"]
-        imageUrl = request.POST['imageUrl']
-        category = request.POST['category']        
-        category = Category.objects.get(pk = category)
-        listing = AuctionListings(
-            title = title,
-            description = description,
-            bid = bid,
-            imageUrl = imageUrl,
-            category = category
-        )
-        listing.save()
-        return HttpResponseRedirect(reverse("index")) 
+        form = CreateListinigForm(request.POST)
+        if form.is_valid():
+            title = request.POST["title"]
+            description = request.POST["description"]
+            initialBid = request.POST["bid"]
+            imageUrl = request.POST['imageUrl']
+            listing = AuctionListings(
+                title = title,
+                description = description,
+                imageUrl = imageUrl,
+            )
+            listing.save()
+            category = request.POST['category'] 
+            if category != "":       
+                category = Category.objects.get(pk = category)
+                listing.category.set(category)
+            
+            bid = Bids(
+                bidValue = initialBid,
+                user = request.user,
+                listing = listing
+            )
+            bid.save()
+            return HttpResponseRedirect(reverse("index")) 
+        else:
+            context ={
+                'form' : form
+            }
+            return(request, "auctions/createListing.html", context)
+            
     else:
         context ={
             'form' : CreateListinigForm()
