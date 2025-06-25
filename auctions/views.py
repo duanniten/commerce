@@ -30,6 +30,7 @@ def create_listing(request):
     if request.method == "POST":
         form = CreateListinigForm(request.POST)
         if form.is_valid():
+            print('teste2')
             title = request.POST["title"]
             description = request.POST["description"]
             initialBid = request.POST["bid"]
@@ -43,7 +44,7 @@ def create_listing(request):
             category = request.POST['category'] 
             if category != "":       
                 category = Category.objects.get(pk = category)
-                listing.category.set(category)
+                listing.category.set([category])
             
             bid = Bids(
                 bidValue = initialBid,
@@ -53,6 +54,7 @@ def create_listing(request):
             bid.save()
             return HttpResponseRedirect(reverse("index")) 
         else:
+            print(form.errors)
             context ={
                 'form' : form
             }

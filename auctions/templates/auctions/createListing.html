@@ -12,12 +12,11 @@
                 {% if field.name == 'category' and not field.field.queryset.exists %}
                 <div class="form-text text-warning">
                     Nenhuma categoria disponível.
-
+                    <input type = "hidden" name="category" value="">
                 </div>
                     {% else %}
                     <label for="{{ field.id_for_label }}" class="form-label">
                         {{ field.label }}
-                        <input type = "hidden" name="category" value="">
                     </label>
                     {{ field }}
                     {% if field.help_text %}
