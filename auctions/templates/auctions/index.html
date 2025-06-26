@@ -18,8 +18,11 @@
                 <div class="card-body">
                     <h5 class="card-title">{{ listing.title }}</h5>
                     <p class="card-text">
-                        <strong>Bid:</strong> R$ {{ listing.bid }}
+                        <strong>Description:</strong> {{ listing.description }}
                     </p>
+                    <p class="card-text">
+                        <strong>Bid:</strong> R$ {{ listing.bid_value }}
+                    </p>    
                 </div>
                 <div class="card-footer text-center">
                     <a href="{% url 'listing' listing.id %}" class="btn btn-primary">Open Listing</a>

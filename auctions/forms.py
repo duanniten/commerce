@@ -3,7 +3,9 @@ from django.forms import ModelForm
 from django import forms
 
 class MakeBid(ModelForm):
-    newBid = forms.DecimalField(max_digits=10, decimal_places=2, label= "Make a bid")
+    class Meta:
+        model = Bids
+        fields = ["bidValue"]
 
 class CreateListinigForm(ModelForm):
     bid = forms.DecimalField(max_digits=10, decimal_places=2, min_value= 0)

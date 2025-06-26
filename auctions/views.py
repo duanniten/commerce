@@ -10,8 +10,17 @@ from .models import *
 from .forms import *
 
 def listing(request, listing_id):
-    try:
+    
         listing = AuctionListings.objects.all()[listing_id - 1]
+
+        bids = Bids.objects.filter(listing=listing)
+        biggerBid = 0
+        for bid in bids:
+            if biggerBid < bid.bidValue:
+                biggerBid =  bid.bidValue
+
+        listing.big_bid = biggerBid
+
         if request.user:
             bid = MakeBid()
         else:
@@ -20,9 +29,9 @@ def listing(request, listing_id):
            "listing" :  listing,
             "makeBid" : bid
         }
+
         return render(request,"auctions/listing.html", context=context)
-    except:
-        return render(request,"auctions/index.html")
+        
     
 
 @login_required
@@ -68,12 +77,22 @@ def create_listing(request):
 
 def index(request):
     listings = AuctionListings.objects.all()
+    bids = Bids.objects.all()
+    biggerBids = {}
+    for bid in bids:
+        if bid.listing in biggerBids:
+            if biggerBids[bid.listing] < bid.bidValue:
+                biggerBids[bid.listing] = bid.bidValue
+        else:
+            biggerBids[bid.listing] = bid.bidValue
+    for listing in listings:
+        listing.bid_value = biggerBids.get(listing, 0)
+
     context = {
-        "listings" : listings
+        "listings" : listings,
     }
 
     return render(request, "auctions/index.html", context=context)
-
 
 def login_view(request):
     if request.method == "POST":
@@ -94,11 +113,9 @@ def login_view(request):
     else:
         return render(request, "auctions/login.html")
 
-
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("index"))
-
 
 def register(request):
     if request.method == "POST":
