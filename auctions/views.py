@@ -10,9 +10,7 @@ from .models import *
 from .forms import *
 
 def listing(request, listing_id):
-    
         listing = AuctionListings.objects.all()[listing_id - 1]
-
         bids = Bids.objects.filter(listing=listing)
         biggerBid = 0
         for bid in bids:
