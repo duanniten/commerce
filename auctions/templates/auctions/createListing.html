@@ -1,26 +1,14 @@
 {% extends "auctions/layout.html" %}
-
 {% block body %}
 <div class="container mt-4">
     <h2 class="mb-4">Create Listing</h2>
-
     <form action="{% url 'createListing' %}" method="post" class="needs-validation" novalidate>
         {% csrf_token %}
-
-        {% for field in form %}
         <div class="mb-3">
-            <label for="{{ field.id_for_label }}" class="form-label">
-                {{ field.label }}
-            </label>
-            {{ field }}
-            {% if field.help_text %}
-            <div class="form-text">{{ field.help_text }}</div>
-            {% endif %}
-            {% for error in field.errors %}
-            <div class="text-danger">{{ error }}</div>
-            {% endfor %}
+            <div class="form-text">
+                {{ form }}
+            </div>
         </div>
-        {% endfor %}
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 </div>

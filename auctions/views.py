@@ -35,21 +35,38 @@ def listing(request, listing_id):
 @login_required
 def create_listing(request):
     if request.method == "POST":
-        title = request.POST["title"]
-        description = request.POST["description"]
-        bid = request.POST["bid"]
-        imageUrl = request.POST['imageUrl']
-        category = request.POST['category']        
-        category = Category.objects.get(pk = category)
-        listing = AuctionListings(
-            title = title,
-            description = description,
-            bid = bid,
-            imageUrl = imageUrl,
-            category = category
-        )
-        listing.save()
-        return HttpResponseRedirect(reverse("index")) 
+        form = CreateListinigForm(request.POST)
+        if form.is_valid():
+            print('teste2')
+            title = request.POST["title"]
+            description = request.POST["description"]
+            initialBid = request.POST["initialBid"]
+            imageUrl = request.POST['imageUrl']
+            listing = AuctionListings(
+                title = title,
+                description = description,
+                imageUrl = imageUrl,
+            )
+            listing.save()
+            category = request.POST['category'] 
+            if category != "":       
+                category = Category.objects.get(pk = category)
+                listing.category.set([category])
+            
+            bid = Bids(
+                bidValue = initialBid,
+                user = request.user,
+                listing = listing
+            )
+            bid.save()
+            return HttpResponseRedirect(reverse("index")) 
+        else:
+            print(form.errors)
+            context ={
+                'form' : form
+            }
+            return(request, "auctions/createListing.html", context)
+            
     else:
         context ={
             'form' : CreateListinigForm(),

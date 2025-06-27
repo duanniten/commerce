@@ -7,10 +7,12 @@ class MakeBid(ModelForm):
         model = Bids
         fields = ["bidValue"]
         labels = {
-            "bidValue" : "Make a new bid: "
+            "bidValue" : "Make a new bid "
         }
 
 class CreateListinigForm(ModelForm):
+    initialBid = forms.DecimalField(
+        max_digits= 10, min_value= 0, decimal_places=2, label= "Initial Bid")
     class Meta:
         model = AuctionListings
         fields = ['title', 'description', 'imageUrl', 'category']
