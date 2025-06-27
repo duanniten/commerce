@@ -12,10 +12,11 @@ class Category(models.Model):
         return self.categories
 
 class AuctionListings(models.Model):
+    id = models.AutoField(primary_key=True)
     title = models.CharField(max_length= 30)
     description = models.TextField()
     imageUrl = models.CharField(blank= True, null= True)
-    category = models.ManyToManyField(Category, blank= True, null= True)
+    category = models.ForeignKey(Category, blank= True, on_delete=models.SET_NULL, null= True)
     creationTimestamp = models.DateTimeField(auto_now_add= True)
     timestamp = models.DateTimeField(auto_now = True)
 

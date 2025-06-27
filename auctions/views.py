@@ -10,14 +10,27 @@ from .models import *
 from .forms import *
 
 def listing(request, listing_id):
-    try:
-        listing = AuctionListings.objects.all()[listing_id]
+        listing = AuctionListings.objects.all()[listing_id - 1]
+        bids = Bids.objects.filter(listing=listing)
+        biggerBid = 0
+        for bid in bids:
+            if biggerBid < bid.bidValue:
+                biggerBid =  bid.bidValue
+
+        listing.big_bid = biggerBid
+
+        if request.user:
+            bid = MakeBid()
+        else:
+            bid = None
         context = {
-            "listing" :  listing
+           "listing" :  listing,
+            "makeBid" : bid
         }
-    except:
-        print("teste")
-    return render(request,"auctions/listing.html", context=context)
+
+        return render(request,"auctions/listing.html", context=context)
+        
+    
 
 @login_required
 def create_listing(request):
@@ -27,24 +40,15 @@ def create_listing(request):
         bid = request.POST["bid"]
         imageUrl = request.POST['imageUrl']
         category = request.POST['category']        
+        category = Category.objects.get(pk = category)
         listing = AuctionListings(
             title = title,
             description = description,
+            bid = bid,
             imageUrl = imageUrl,
+            category = category
         )
         listing.save()
-        if category !='':
-            category = Category.objects.get(pk = category)
-            listing.category.set([category])
-
-
-        bids = Bids(
-            bidValue = bid,
-            user = request.user,
-            listing = listing
-        )
-        bids.save()
-
         return HttpResponseRedirect(reverse("index")) 
     else:
         context ={
@@ -54,12 +58,22 @@ def create_listing(request):
 
 def index(request):
     listings = AuctionListings.objects.all()
+    bids = Bids.objects.all()
+    biggerBids = {}
+    for bid in bids:
+        if bid.listing in biggerBids:
+            if biggerBids[bid.listing] < bid.bidValue:
+                biggerBids[bid.listing] = bid.bidValue
+        else:
+            biggerBids[bid.listing] = bid.bidValue
+    for listing in listings:
+        listing.bid_value = biggerBids.get(listing, 0)
+
     context = {
-        "listings" : listings
+        "listings" : listings,
     }
 
     return render(request, "auctions/index.html", context=context)
-
 
 def login_view(request):
     if request.method == "POST":
@@ -80,11 +94,9 @@ def login_view(request):
     else:
         return render(request, "auctions/login.html")
 
-
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("index"))
-
 
 def register(request):
     if request.method == "POST":
