@@ -7,11 +7,12 @@
 <div class="container mt-5">
     <div class="card shadow">
         {% if listing.imageUrl %}
-            <img src="{{ listing.imageUrl }}" class="card-img-top" alt="Imagem de {{ listing.title }}">
+        <img src="{{ listing.imageUrl }}" class="card-img-top" alt="Imagem de {{ listing.title }}">
         {% else %}
-            <div class="card-img-top d-flex align-items-center justify-content-center bg-light text-muted" style="height: 300px;">
-                <span>Sem imagem</span>
-            </div>
+        <div class="card-img-top d-flex align-items-center justify-content-center bg-light text-muted"
+            style="height: 300px;">
+            <span>Sem imagem</span>
+        </div>
         {% endif %}
         <div class="card-body">
             <h2 class="card-title">{{ listing.title }}</h2>
@@ -21,14 +22,29 @@
             <p class="card-text">
                 <strong>Actual bid:</strong>
                 {% if listing.big_bid %}
-                    R$ {{ listing.big_bid }}
+                R$ {{ listing.big_bid }}
                 {% else %}
-                    R$ 
+                R$
                 {% endif %}
             </p>
-            {{ makeBid }}
-            <div class="text-center mt-4">
-                <a href="{% url 'index' %}" class="btn btn-secondary">Voltar para listagem</a>
+            <form action="{% url 'listing' listing.id %}" method="POST">
+                {% csrf_token %}
+                <div class="row mb-2">
+                    {% if error_message %}
+                    <div class="alert alert-danger">{{ error_message }}</div>
+                    {% endif %}
+                    <div class="col-6">
+                        {{ makeBid }}
+                    </div>
+                    <input type="hidden" name="listing_id" value="{{ listing.id }}">
+                    <input type="hidden" name="actualBid" value="{{ listing.big_bid }}">
+                    <button type="submit" class="col-2 btn btn-primary"> BID </button>
+                </div>
+            </form>
+            <div class="row">
+                <div class="col">
+                    <a href="{% url 'index' %}" class="btn btn-secondary">Back to listing</a>
+                </div>
             </div>
         </div>
     </div>

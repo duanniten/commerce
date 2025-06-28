@@ -9,6 +9,9 @@ class MakeBid(ModelForm):
         labels = {
             "bidValue" : "Make a new bid "
         }
+        widgets = {
+            "bidValue" : forms.NumberInput(attrs={ "class " : "form-control"})
+        }
 
 class CreateListinigForm(ModelForm):
     initialBid = forms.DecimalField(

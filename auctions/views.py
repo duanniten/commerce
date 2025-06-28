@@ -10,6 +10,34 @@ from .models import *
 from .forms import *
 
 def listing(request, listing_id):
+        if request.method == "POST":
+            bidForm = MakeBid(request.POST)
+            if bidForm.is_valid() and request.POST['bidValue'] > request.POST['actualBid']:
+
+                listing = AuctionListings.objects.get(id = request.POST['listing_id'])
+
+                bid = Bids( 
+                    bidValue = request.POST['bidValue'],
+                    user = request.user,
+                    listing = listing
+                )
+                bid.save()
+                return HttpResponseRedirect(reverse("index")) 
+            else:
+                
+                listing = AuctionListings.objects.get(id = request.POST['listing_id'])
+                listing.big_bid = request.POST['actualBid']
+                context = {
+                    "listing" :  listing,
+                    "makeBid" : bidForm,
+                    "error_message" : "Bid Should be bigger than actual Bid"
+                    }
+                
+                return render(
+                    request, "auctions/listing.html", context=context
+                )
+
+
         listing = AuctionListings.objects.all()[listing_id - 1]
         bids = Bids.objects.filter(listing=listing)
         biggerBid = 0
