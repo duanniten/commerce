@@ -12,31 +12,33 @@ from .forms import *
 def listing(request, listing_id):
         if request.method == "POST":
             bidForm = MakeBid(request.POST)
-            if bidForm.is_valid() and request.POST['bidValue'] > request.POST['actualBid']:
+            if request.user.is_authenticated:
+                
+                if bidForm.is_valid() and request.POST['bidValue'] > request.POST['actualBid']:
 
-                listing = AuctionListings.objects.get(id = request.POST['listing_id'])
+                    listing = AuctionListings.objects.get(id = request.POST['listing_id'])
 
-                bid = Bids( 
-                    bidValue = request.POST['bidValue'],
-                    user = request.user,
-                    listing = listing
-                )
-                bid.save()
-                return HttpResponseRedirect(reverse("index")) 
+                    bid = Bids( 
+                        bidValue = request.POST['bidValue'],
+                        user = request.user,
+                        listing = listing
+                    )
+                    bid.save()
+                    return HttpResponseRedirect(reverse("index")) 
+                else:
+                    error_message = "Bid Should be bigger than actual Bid"
+                    
             else:
-                
-                listing = AuctionListings.objects.get(id = request.POST['listing_id'])
-                listing.big_bid = request.POST['actualBid']
-                context = {
-                    "listing" :  listing,
-                    "makeBid" : bidForm,
-                    "error_message" : "Bid Should be bigger than actual Bid"
-                    }
-                
-                return render(
-                    request, "auctions/listing.html", context=context
-                )
-
+                error_message = "User should be login for do a bid"
+                bidForm = None
+            listing = AuctionListings.objects.get(id = request.POST['listing_id'])
+            listing.big_bid = request.POST['actualBid']
+            context = {
+                        "listing" :  listing,
+                        "makeBid" : bidForm,
+                        "error_message" :  error_message
+                        }            
+            return render(request, "auctions/listing.html", context= context)
 
         listing = AuctionListings.objects.all()[listing_id - 1]
         bids = Bids.objects.filter(listing=listing)
@@ -47,10 +49,10 @@ def listing(request, listing_id):
 
         listing.big_bid = biggerBid
 
-        if request.user:
+        if request.user.is_authenticated:
             bid = MakeBid()
         else:
-            bid = None
+            bid = ""
         context = {
            "listing" :  listing,
             "makeBid" : bid
