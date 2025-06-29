@@ -7,7 +7,8 @@
 <div class="container mt-5">
     <div class="card shadow">
         {% if listing.imageUrl %}
-        <img src="{{ listing.imageUrl }}" class="card-img-top" alt="Imagem de {{ listing.title }}">
+        <img src="{{ listing.imageUrl }}" class="card-img-top" alt="Imagem de {{ listing.title }}" style="max-height: 400px;
+    object-fit: contain;">
         {% else %}
         <div class="card-img-top d-flex align-items-center justify-content-center bg-light text-muted"
             style="height: 300px;">
@@ -23,6 +24,8 @@
                 <strong>Actual bid:</strong>
                 {% if listing.big_bid %}
                 R$ {{ listing.big_bid }}
+                <strong>User:</strong>
+                {{listing.big_user}}
                 {% else %}
                 R$
                 {% endif %}

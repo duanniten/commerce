@@ -2,9 +2,6 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
-class User(AbstractUser):
-    pass
-
 class Category(models.Model):
     categories = models.CharField(max_length = 30)
     
@@ -19,9 +16,12 @@ class AuctionListings(models.Model):
     category = models.ForeignKey(Category, blank= True, on_delete=models.SET_NULL, null= True)
     creationTimestamp = models.DateTimeField(auto_now_add= True)
     timestamp = models.DateTimeField(auto_now = True)
-
     def __str__(self):
         return self.title
+
+class User(AbstractUser):
+    watchlist = models.ManyToManyField(AuctionListings,blank=True)
+    
     
 class Bids(models.Model):
     bidValue = models.DecimalField(max_digits=12, decimal_places=2)

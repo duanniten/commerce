@@ -10,6 +10,12 @@ from .models import *
 from .forms import *
 
 def listing(request, listing_id):
+        if request.method == "POST-WATCH":
+            if request.user.is_authenticated:
+                user = User.objects.get(username = request.user)
+                listing = AuctionListings.objects.get(id = request.POST['listing_id'])
+                user.watchlist.add(listing)
+
         if request.method == "POST":
             bidForm = MakeBid(request.POST)
             if request.user.is_authenticated:
@@ -46,8 +52,11 @@ def listing(request, listing_id):
         for bid in bids:
             if biggerBid < bid.bidValue:
                 biggerBid =  bid.bidValue
+                biggerBidUser = bid.user
 
         listing.big_bid = biggerBid
+        listing.big_user = biggerBidUser
+
 
         if request.user.is_authenticated:
             bid = MakeBid()
