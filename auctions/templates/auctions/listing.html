@@ -41,21 +41,30 @@
                 R$
                 {% endif %}
             </p>
-            {%if makeBid %}
-            <form action="{% url 'listing' listing.id %}" method="POST">
-                {% csrf_token %}
-                <div class="row mb-2">
-                    {% if error_message %}
-                    <div class="alert alert-danger">{{ error_message }}</div>
-                    {% endif %}
-                    <div class="col-6">
-                        {{ makeBid }}
-                    </div>
+            {% if createUser == True %}
+                <form action="{% url 'listing' listing.id %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="close" value="True">
                     <input type="hidden" name="listing_id" value="{{ listing.id }}">
-                    <input type="hidden" name="actualBid" value="{{ listing.big_bid }}">
-                    <button type="submit" class="col-2 btn btn-primary"> BID </button>
-                </div>
-            </form>
+                    <button type="submit">Close listing</button>
+                </form>
+            {%else%}
+                {%if makeBid %}
+                <form action="{% url 'listing' listing.id %}" method="POST">
+                    {% csrf_token %}
+                    <div class="row mb-2">
+                        {% if error_message %}
+                        <div class="alert alert-danger">{{ error_message }}</div>
+                        {% endif %}
+                        <div class="col-6">
+                            {{ makeBid }}
+                        </div>
+                        <input type="hidden" name="listing_id" value="{{ listing.id }}">
+                        <input type="hidden" name="actualBid" value="{{ listing.big_bid }}">
+                        <button type="submit" class="col-2 btn btn-primary"> BID </button>
+                    </div>
+                </form>
+                {% endif %}
             {% endif %}
             <div class="row">
                 <div class="col">

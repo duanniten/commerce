@@ -68,6 +68,10 @@ def listing(request, listing_id):
         if request.user.is_authenticated:
             bid = MakeBid()
             user = User.objects.get(username = request.user)
+            if user == listing.createUser:
+                createUser = True
+            else:
+                createUser = listing.createUser
             if listing in user.watchlist.all():
                 in_watchlist = True
             else:
@@ -77,7 +81,8 @@ def listing(request, listing_id):
         context = {
            "listing" :  listing,
             "makeBid" : bid,
-            "watchlist" : in_watchlist
+            "watchlist" : in_watchlist,
+            "createUser" : createUser
         }
 
         return render(request,"auctions/listing.html", context=context)
