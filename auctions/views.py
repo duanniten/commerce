@@ -10,13 +10,20 @@ from .models import *
 from .forms import *
 
 def listing(request, listing_id):
-        if request.method == "POST-WATCH":
+        if request.method == "POST" and request.POST.get("watchlist"):
+            action = request.POST.get("watchlist")
+            listing_id = request.POST['listing_id']
             if request.user.is_authenticated:
                 user = User.objects.get(username = request.user)
-                listing = AuctionListings.objects.get(id = request.POST['listing_id'])
-                user.watchlist.add(listing)
+                listing = AuctionListings.objects.get(id = listing_id)
+                if action == "add":
+                    user.watchlist.add(listing)
+                elif action == "remove":
+                    user.watchlist.remove(listing)
+                
 
-        if request.method == "POST":
+
+        elif request.method == "POST":
             bidForm = MakeBid(request.POST)
             if request.user.is_authenticated:
                 
@@ -45,7 +52,7 @@ def listing(request, listing_id):
                         "error_message" :  error_message
                         }            
             return render(request, "auctions/listing.html", context= context)
-
+        listing_id = int(listing_id)
         listing = AuctionListings.objects.all()[listing_id - 1]
         bids = Bids.objects.filter(listing=listing)
         biggerBid = 0
@@ -60,11 +67,17 @@ def listing(request, listing_id):
 
         if request.user.is_authenticated:
             bid = MakeBid()
+            user = User.objects.get(username = request.user)
+            if listing in user.watchlist.all():
+                in_watchlist = True
+            else:
+                in_watchlist = False
         else:
             bid = ""
         context = {
            "listing" :  listing,
-            "makeBid" : bid
+            "makeBid" : bid,
+            "watchlist" : in_watchlist
         }
 
         return render(request,"auctions/listing.html", context=context)
