@@ -16,6 +16,7 @@ class AuctionListings(models.Model):
     category = models.ForeignKey(Category, blank= True, on_delete=models.SET_NULL, null= True)
     creationTimestamp = models.DateTimeField(auto_now_add= True)
     timestamp = models.DateTimeField(auto_now = True)
+    createUser = models.ForeignKey("User",on_delete=models.CASCADE)
     def __str__(self):
         return self.title
 
