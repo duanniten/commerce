@@ -3,8 +3,6 @@ from django.db import models
 
 class User(AbstractUser):
     watchList = models.ManyToManyField("Listing")
-    createdListings = models.ManyToManyField("Listing")
-    wonListings = models.ManyToManyField("Listing")
     
 class Bids(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
@@ -18,3 +16,9 @@ class Comment(models.Model):
     text = models.TextField()
     listing = models.ForeignKey('Listing', on_delete=models.CASCADE)
 
+class Listing(models.Model):
+    timestamp = models.DateTimeField(auto_now_add=True)
+    changeTimestamp = models.DateTimeField(auto_now=True)
+    imageUrl = models.URLField()
+    title = models.CharField(max_length=64)
+    description = models.TextField()
