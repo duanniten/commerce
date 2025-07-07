@@ -22,3 +22,9 @@ class Listing(models.Model):
     imageUrl = models.URLField()
     title = models.CharField(max_length=64)
     description = models.TextField()
+
+    createUser = models.ForeignKey(User, on_delete= models.CASCADE)
+    topBid = models.ForeignKey(Bids, on_delete= models.SET_NULL)
+    
+
+    
